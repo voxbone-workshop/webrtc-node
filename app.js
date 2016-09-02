@@ -1,3 +1,5 @@
+var debug = require('debug')('webrtc-node');
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -42,5 +44,8 @@ app.use(function(req, res, next) {
     next(err);
 });
 
+app.set('port', process.env.PORT || 5000);
 
-module.exports = app;
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});

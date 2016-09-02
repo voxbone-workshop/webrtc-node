@@ -6,7 +6,7 @@ html
     block script
 
       script(src='//webrtc.voxbone.com/js/jssip-0.7.9.min-vox.js', type='text/javascript')
-      script(src='//webrtc.voxbone.com/js/voxbone-0.0.5.js', type='text/javascript')
+      script(src='/voxbone-2.2.0-alpha.js', type='text/javascript')
       script(src='//code.jquery.com/jquery-latest.min.js', type='text/javascript')
       script(type='text/javascript').
         /** This part is required as it handle Voxbone WebRTC initialization **/
@@ -19,7 +19,7 @@ html
           //voxbone.WebRTC.preferedPop = 'BE';
           // set custom event handlers
           voxbone.WebRTC.customEventHandler.progress = function(e) {
-            document.getElementById("status_message").innerHTML="Calling " + document.getElementById('number').value;
+            document.getElementById("status_message").innerHTML="Call Progressing";
           };
           voxbone.WebRTC.customEventHandler.getUserMediaFailed = function(e) {
             document.getElementById("status_message").innerHTML="<b><font color='red'>Failed to access mic: " + e.data.cause + "</font></b>";
@@ -33,9 +33,20 @@ html
           voxbone.WebRTC.customEventHandler.ended = function(e) {
             document.getElementById("status_message").innerHTML="<b><font color='red'>Call Ended</font></b>";
           };
-          voxbone.WebRTC.customEventHandler.authExpired = function(e) {
-            voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
+        //-   voxbone.WebRTC.customEventHandler.authExpired = function(e) {
+        //-     voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
+        //-   };
+          voxbone.WebRTC.customEventHandler.connected = function(e) {
+            document.getElementById("status_message").innerHTML="<b><font color='green'>Connected</font></b>";
           };
+          voxbone.WebRTC.customEventHandler.registered = function(e) {
+            document.getElementById("status_message").innerHTML="<b><font color='green'>Registered</font></b>";
+          };
+
+          voxbone.WebRTC.customEventHandler.localMediaVolume = function(e) {
+              console.log('VOLUME', e);
+          }
+
           //Set the caller-id, domain name gets automatically stripped off
           //Note that It must be a valid sip uri.
           //Default value is: voxrtc@voxbone.com
@@ -74,13 +85,21 @@ html
             * Set this option to true to allow voxbone to collect call logs
           **/
           //voxbone.WebRTC.configuration.post_logs = true;
-
+          
+          voxbone.WebRTC.configuration.log_level = voxbone.Logger.log_level.INFO;
+          voxbone.WebRTC.configuration.uri = 'sip:dan@workshop-gateway.voxbone.com';
+          voxbone.WebRTC.configuration.ws_servers = ['wss://workshop-gateway.voxbone.com'];
+          voxbone.WebRTC.configuration.register = true;
+          voxbone.WebRTC.configuration.onCall = function (approve) {
+              console.log('recieved a call');
+              return true;
+          }
 
           //Bootstrap Voxbone WebRTC javascript object
-          //voxbone.WebRTC.init(#{voxrtc_config});
+          voxbone.WebRTC.init(#{voxrtc_config});
 
           //Basic Authentication can also be used instead of using the token in voxbone.WebRTC.init()
-          voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
+          //voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
         };
 
         /** Optional part, only use to play with mute **/
@@ -98,17 +117,9 @@ html
         }
   //invoke init() method when page is initializing
   body(onload='init();', onbeforeunload='voxbone.WebRTC.unloadHandler();' style='text-align: center;')
-    h1 Click2Call Demo
+    h1 SIP to WebRTC Demo
     .container(style='width:200px; margin-top:10%;')
       form
-        //
-          input text which holds the number to dial
-        input#number.btn-block.form-control.input-lg(type='tel', placeholder='Enter your VoxDID', style='text-align:center')
-        //
-          place a call using voxbone webrtc js lib
-        button.btn.btn-success.btn-lg.btn-block(type='button', onclick="voxbone.WebRTC.call(document.getElementById('number').value);")
-          | Dial
-          span.glyphicon.glyphicon-earphone.pull-left
         //
           hangup the current call in progress
         button.btn.btn-danger.btn-lg.btn-block(type='button', onclick='voxbone.WebRTC.hangup();')
