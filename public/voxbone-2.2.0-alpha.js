@@ -34999,7 +34999,7 @@ extend(voxbone, {
 							data.terminate();
 						}
 					}
-					voxbone.WebRTC.onCall(handleCall);
+					voxbone.WebRTC.onCall(data, handleCall);
 				}
 			});
 			voxbone.WebRTC.phone.start();

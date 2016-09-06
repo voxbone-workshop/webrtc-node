@@ -90,7 +90,7 @@ html
           voxbone.WebRTC.configuration.uri = 'sip:1686570@workshop-gateway.voxbone.com';
           voxbone.WebRTC.configuration.ws_servers = ['wss://workshop-gateway.voxbone.com'];
 
-          voxbone.WebRTC.onCall = function (cb) {
+          voxbone.WebRTC.onCall = function (data, cb) {
               console.log('recieved a call');
               cb(true);
           }
