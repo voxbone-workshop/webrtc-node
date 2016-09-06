@@ -87,19 +87,23 @@ html
           //voxbone.WebRTC.configuration.post_logs = true;
           
           voxbone.WebRTC.configuration.log_level = voxbone.Logger.log_level.INFO;
-          voxbone.WebRTC.configuration.uri = 'sip:dan@workshop-gateway.voxbone.com';
+
+          voxbone.WebRTC.username = '1686570';
+          voxbone.WebRTC.password = 'Webrtc11';
+          voxbone.WebRTC.configuration.uri = 'sip:1686570@workshop-gateway.voxbone.com';
           voxbone.WebRTC.configuration.ws_servers = ['wss://workshop-gateway.voxbone.com'];
-          voxbone.WebRTC.configuration.register = true;
-          voxbone.WebRTC.configuration.onCall = function (approve) {
+          voxbone.WebRTC.configuration.hack_via_tcp = true;
+
+          voxbone.WebRTC.onCall = function (cb) {
               console.log('recieved a call');
-              return true;
+              cb(true);
           }
 
           //Bootstrap Voxbone WebRTC javascript object
-          voxbone.WebRTC.init(#{voxrtc_config});
+          //voxbone.WebRTC.init(#{voxrtc_config});
 
           //Basic Authentication can also be used instead of using the token in voxbone.WebRTC.init()
-          //voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
+          voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
         };
 
         /** Optional part, only use to play with mute **/
