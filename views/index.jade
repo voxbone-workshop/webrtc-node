@@ -33,9 +33,9 @@ html
           voxbone.WebRTC.customEventHandler.ended = function(e) {
             document.getElementById("status_message").innerHTML="<b><font color='red'>Call Ended</font></b>";
           };
-        //-   voxbone.WebRTC.customEventHandler.authExpired = function(e) {
-        //-     voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
-        //-   };
+          voxbone.WebRTC.customEventHandler.authExpired = function(e) {
+            voxbone.WebRTC.basicAuthInit('#{username}', '#{password}');
+          };
           voxbone.WebRTC.customEventHandler.connected = function(e) {
             document.getElementById("status_message").innerHTML="<b><font color='green'>Connected</font></b>";
           };
